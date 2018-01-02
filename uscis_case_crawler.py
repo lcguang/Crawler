@@ -1,6 +1,7 @@
 from BeautifulSoup import BeautifulSoup
 import requests
 import urlparse
+from time import gmtime, strftime
 
 URL = 'https://egov.uscis.gov/casestatus/landing.do'
 s = requests.Session()
@@ -28,12 +29,15 @@ def fetch_result(number):
     soup1 = BeautifulSoup(result_text)
 
     result = soup1.find('div', {'class': 'rows text-center'})
-    #res = result.find('h1')
-    return result
+    if result is None:
+        return 'None'
+    res = result.find('h1')
+    return res
 
 begin_number = 1890017759
-end_number = 1890015805
-file = open('results_reverse.txt', 'w')
+end_number = 1890016759
+file_name = 'results/' + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + '.txt'
+file = open(file_name, 'w')
 for n in range(begin_number, end_number, -1):
    number = 'YSC' + str(n)
    file.write(str(number) + '\t')
